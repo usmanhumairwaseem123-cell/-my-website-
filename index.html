@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dineloop.ai – Get restaurant orders on WhatsApp, automatically</title>
+<meta name="description" content="Dineloop.ai takes restaurant orders on WhatsApp in Urdu and English: menu, cart, delivery charges, Easypaisa and cash on delivery. No app for customers to download.">
+<meta name="theme-color" content="#7C3AED">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: { ink:'#1A1033', blue:'#7C3AED', deep:'#5B21B6', mist:'#F6F2FF', line:'#E8E0F7', slate:'#5E5675' },
+    fontFamily: { display:['Sora','"Segoe UI"','system-ui','sans-serif'], body:['Figtree','"Segoe UI"','system-ui','sans-serif'] }
+  } } }
+</script>
+<style>
+  html { scroll-behavior:smooth; scroll-padding-top:5rem; color-scheme:light; }
+  body { font-family:Figtree,"Segoe UI",system-ui,sans-serif; background:#fff; color:#1A1033; }
+  h1,h2,h3,.font-display { font-family:Sora,"Segoe UI",system-ui,sans-serif; }
+  a:focus-visible, summary:focus-visible { outline:3px solid #7C3AED; outline-offset:3px; border-radius:6px; }
+  .bubble { max-width:88%; padding:.55rem .8rem; border-radius:.9rem; font-size:.875rem; line-height:1.45; color:#1A1033; opacity:0; animation:pop .35s ease-out forwards; }
+  .in-b  { background:#fff; border-top-left-radius:.2rem; align-self:flex-start; box-shadow:0 1px 2px rgba(11,22,48,.1); }
+  .out-b { background:#EADFFF; border-top-right-radius:.2rem; align-self:flex-end; }
+  @keyframes pop { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:none; } }
+  .float-a { animation:float 6s ease-in-out infinite; } .float-b { animation:float 7s ease-in-out -2s infinite; }
+  @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-7px); } }
+  a.btn { transition:transform .2s ease, filter .2s ease; } a.btn:hover { transform:translateY(-2px); filter:brightness(1.08); }
+  details > summary { list-style:none; cursor:pointer; } details > summary::-webkit-details-marker { display:none; }
+  details[open] .plus { transform:rotate(45deg); }
+  .rv { opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s ease; transition-delay:var(--d,0ms); }
+  .rv.in { opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce) { .bubble { animation:none; opacity:1; } .float-a,.float-b { animation:none; } .rv { opacity:1; transform:none; transition:none; } a.btn:hover { transform:none; } html { scroll-behavior:auto; } }
+
+  /* Extra light motion */
+  .blob { position:absolute; border-radius:9999px; filter:blur(64px); pointer-events:none; animation:drift 14s ease-in-out infinite alternate; }
+  @keyframes drift { from { transform:translate(0,0) scale(1); } to { transform:translate(34px,22px) scale(1.15); } }
+  #demo { animation:ring 3.2s ease-out infinite; }
+  @keyframes ring { 0% { box-shadow:0 0 0 0 rgba(124,58,237,.38); } 70%,100% { box-shadow:0 0 0 14px rgba(124,58,237,0); } }
+  @media (prefers-reduced-motion: reduce) { .blob, #demo { animation:none; } }
+
+  /* Typing indicator shown briefly before the final bot message */
+  .typing { align-self:flex-start; display:flex; align-items:center; gap:5px; overflow:hidden; background:#fff; border-radius:.9rem; border-top-left-radius:.2rem; box-shadow:0 1px 2px rgba(26,16,51,.1); opacity:0; max-height:0; padding:0 .85rem; margin-top:-.625rem; animation:typing .95s ease-in-out 3.75s both; }
+  .typing i { width:6px; height:6px; border-radius:50%; background:#A78BFA; animation:dot .9s ease-in-out infinite; }
+  .typing i:nth-child(2) { animation-delay:.15s; } .typing i:nth-child(3) { animation-delay:.3s; }
+  @keyframes typing { 0% { opacity:0; max-height:0; padding-top:0; padding-bottom:0; margin-top:-.625rem; } 12%,88% { opacity:1; max-height:2.4rem; padding-top:.75rem; padding-bottom:.75rem; margin-top:0; } 100% { opacity:0; max-height:0; padding-top:0; padding-bottom:0; margin-top:-.625rem; } }
+  @keyframes dot { 0%,60%,100% { transform:translateY(0); opacity:.5; } 30% { transform:translateY(-4px); opacity:1; } }
+  @media (prefers-reduced-motion: reduce) { .typing { display:none; } }
+</style>
+</head>
+<body class="antialiased">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs><linearGradient id="dl-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A78BFA"/><stop offset="1" stop-color="#6D28D9"/></linearGradient></defs>
+  <symbol id="logo" viewBox="0 0 32 32">
+    <path fill="url(#dl-grad)" d="M9 2.500H23A6.500 6.500 0 0 1 29.500 9V19A6.500 6.500 0 0 1 23 25.500H15.500L9.500 30.500V25.500A6.500 6.500 0 0 1 2.500 19V9A6.500 6.500 0 0 1 9 2.500Z"/>
+    <circle cx="16" cy="14" r="5.500" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-dasharray="27 7.600"/>
+    <polygon fill="#fff" points="20.600,9.300 17.300,5.900 16.300,11.300"/>
+  </symbol>
+  <symbol id="tick" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#7C3AED" fill-opacity=".12"/><path d="M6 10.300l2.700 2.700L14 7.500" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="cross" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#E5484D" fill-opacity=".12"/><path d="M7 7l6 6M13 7l-6 6" fill="none" stroke="#E5484D" stroke-width="2" stroke-linecap="round"/></symbol>
+</svg>
+
+<!-- Header -->
+<header class="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
+    <a href="#top" class="flex items-center gap-2.5 font-display text-xl font-extrabold tracking-tight" aria-label="Dineloop.ai home">
+      <svg width="34" height="34" aria-hidden="true"><use href="#logo"/></svg><span>Dineloop<span class="text-blue">.ai</span></span>
+    </a>
+    <nav class="hidden items-center gap-8 text-sm font-medium text-slate md:flex" aria-label="Main">
+      <a href="#why" class="hover:text-ink">Why Dineloop</a>
+      <a href="#features" class="hover:text-ink">Features</a>
+      <a href="#how" class="hover:text-ink">How it works</a>
+      <a href="#pricing" class="hover:text-ink">Pricing</a>
+      <a href="#faq" class="hover:text-ink">FAQ</a>
+    </nav>
+    <a href="#demo" class="btn rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white">Get a free demo</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- Hero -->
+<section class="relative overflow-hidden bg-gradient-to-b from-mist to-white">
+  <div class="blob -right-16 -top-20 h-80 w-80 bg-[#A78BFA]/40" aria-hidden="true"></div>
+  <div class="blob -bottom-24 -left-20 h-72 w-72 bg-[#7C3AED]/20" style="animation-duration:18s" aria-hidden="true"></div>
+  <div class="relative mx-auto grid max-w-6xl items-center gap-16 px-5 pb-20 pt-14 md:grid-cols-2 md:pb-28 md:pt-20">
+    <div>
+      <h1 class="text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.3rem]">Get restaurant orders on WhatsApp, <span class="text-blue">automatically.</span></h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate">Your customers chat with Dineloop.ai, pick their food, share their location and confirm. You get a finished order with the bill, address and payment status. No missed calls, no wrong orders.</p>
+      <div class="mt-9 flex flex-wrap gap-4">
+        <a id="demo" href="https://wa.me/923363929666?text=Hi%2C%20I%27d%20like%20a%20free%20Dineloop.ai%20demo" class="btn rounded-full bg-blue px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue/25">Get a free demo</a>
+        <a href="#how" class="btn rounded-full border border-line bg-white px-7 py-3.5 text-base font-semibold">See how it works</a>
+      </div>
+      <dl class="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-line pt-6 text-sm">
+        <div><dt class="font-display text-xl font-bold">0</dt><dd class="text-slate">apps to install</dd></div>
+        <div><dt class="font-display text-xl font-bold">2</dt><dd class="text-slate">languages</dd></div>
+        <div><dt class="font-display text-xl font-bold">Instant</dt><dd class="text-slate">replies</dd></div>
+      </dl>
+    </div>
+
+    <div class="relative mx-auto w-full max-w-sm" role="img" aria-label="Example WhatsApp order chat and the order alert the owner receives">
+      <div class="float-a overflow-hidden rounded-[2rem] border border-line bg-white shadow-2xl shadow-ink/10">
+        <div class="flex items-center gap-3 border-b border-line px-4 py-3">
+          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue font-display text-sm font-bold text-white">BF</div>
+          <div><p class="text-sm font-semibold leading-tight">Brothers Food</p><p class="text-xs text-slate">Powered by Dineloop.ai</p></div>
+        </div>
+        <div class="flex flex-col gap-2.5 p-4" style="background:#F3EEFD; min-height:22rem">
+          <div class="bubble out-b" style="animation-delay:.3s">Hi</div>
+          <div class="bubble in-b" style="animation-delay:1s">Welcome to Brothers Food! Tap “View Menu” to start.</div>
+          <div class="bubble out-b" style="animation-delay:1.8s">2 × Special Zinger Burger</div>
+          <div class="bubble in-b" style="animation-delay:2.6s">Burgers Rs. 700<br>Delivery (Mehran Town) Rs. 80<br><strong>Total: Rs. 780</strong></div>
+          <div class="bubble out-b" style="animation-delay:3.4s">Confirm</div>
+          <span class="typing" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div class="bubble in-b" style="animation-delay:4.7s">Order confirmed. Your Order ID is ORD-0012.</div>
+        </div>
+      </div>
+      <div class="float-b absolute -right-3 top-10 hidden w-56 rounded-xl border border-line bg-white p-3.5 text-sm shadow-xl shadow-ink/10 sm:block lg:-right-10">
+        <p class="flex items-center gap-2 font-semibold"><span class="h-2 w-2 rounded-full bg-blue"></span>New order ORD-0012</p>
+        <p class="mt-1 text-slate">Rs. 780 · Mehran Town<br>Easypaisa · awaiting your check</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why -->
+<section id="why" class="mx-auto max-w-6xl px-5 py-16 md:py-24">
+  <h2 class="max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">Phone and DM orders quietly cost you sales</h2>
+  <div class="mt-12 grid gap-10 md:grid-cols-3">
+    <div class="border-t-2 border-ink pt-6"><p class="text-sm font-semibold text-slate">At rush hour, calls go unanswered</p><h3 class="mt-2 text-xl font-bold">Every chat gets an instant reply</h3><p class="mt-3 leading-relaxed text-slate">The bot answers every customer at the same time, so nobody waits on hold or gives up and orders elsewhere.</p></div>
+    <div class="border-t-2 border-ink pt-6"><p class="text-sm font-semibold text-slate">Addresses and items get misheard</p><h3 class="mt-2 text-xl font-bold">Customers build their own order</h3><p class="mt-3 leading-relaxed text-slate">They tap items, type a quantity and share a location pin. What they confirm is exactly what you receive.</p></div>
+    <div class="border-t-2 border-ink pt-6"><p class="text-sm font-semibold text-slate">Payment proof is easy to fake</p><h3 class="mt-2 text-xl font-bold">Transaction IDs can’t be reused</h3><p class="mt-3 leading-relaxed text-slate">An Easypaisa transaction ID is accepted only once, and nothing is marked paid until you reply “PAID”.</p></div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="bg-mist">
+  <div class="mx-auto max-w-6xl px-5 py-16 md:py-24">
+    <h2 class="max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">Built for how restaurants really run</h2>
+    <div class="mt-12 grid gap-5 md:grid-cols-3">
+      <div class="rounded-2xl border border-line bg-white p-7 md:col-span-2"><h3 class="text-xl font-bold">No app to download</h3><p class="mt-2 max-w-lg leading-relaxed text-slate">Customers already have WhatsApp. They tap buttons to choose items and a delivery area, and the whole order happens in one chat.</p></div>
+      <div class="rounded-2xl bg-deep p-7 text-white"><h3 class="text-xl font-bold">Urdu and English</h3><p class="mt-2 leading-relaxed text-white/85">Customers choose once. Every message, button and bill follows their language.</p></div>
+      <div class="rounded-2xl border border-line bg-white p-7"><h3 class="text-xl font-bold">Automatic bills</h3><p class="mt-2 leading-relaxed text-slate">Totals and area-wise delivery charges are calculated for you, with an order ID on every receipt.</p></div>
+      <div class="rounded-2xl border border-line bg-white p-7"><h3 class="text-xl font-bold">Easypaisa and cash on delivery</h3><p class="mt-2 leading-relaxed text-slate">The two ways your customers actually pay, with you in control of every confirmation.</p></div>
+      <div class="rounded-2xl border border-line bg-white p-7"><h3 class="text-xl font-bold">Location pin and map link</h3><p class="mt-2 leading-relaxed text-slate">Your alert includes a map link, so the rider finds the door faster.</p></div>
+      <div class="rounded-2xl border border-line bg-white p-7"><h3 class="text-xl font-bold">Opening hours, handled</h3><p class="mt-2 leading-relaxed text-slate">Outside your hours the bot says when you open. Late-night timings that cross midnight work fine.</p></div>
+      <div class="rounded-2xl border border-line bg-white p-7"><h3 class="text-xl font-bold">Many restaurants, one system</h3><p class="mt-2 leading-relaxed text-slate">Every restaurant has its own menu, prices, areas and hours.</p></div>
+      <div class="rounded-2xl border border-line bg-white p-7"><h3 class="text-xl font-bold">Safe in the dinner rush</h3><p class="mt-2 leading-relaxed text-slate">Double taps and repeated messages never create a second order.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section id="how" class="mx-auto max-w-6xl px-5 py-16 md:py-24">
+  <h2 class="max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">Live in three steps</h2>
+  <ol class="mt-12 grid gap-10 md:grid-cols-3">
+    <li><span class="flex h-11 w-11 items-center justify-center rounded-full bg-ink font-display font-bold text-white">1</span><h3 class="mt-5 text-xl font-bold">Share your menu</h3><p class="mt-2 leading-relaxed text-slate">Send your items, prices, delivery areas and opening hours. We load them for you.</p></li>
+    <li><span class="flex h-11 w-11 items-center justify-center rounded-full bg-ink font-display font-bold text-white">2</span><h3 class="mt-5 text-xl font-bold">We connect your number</h3><p class="mt-2 leading-relaxed text-slate">We set up the bot on your business WhatsApp number and run test orders with you first.</p></li>
+    <li><span class="flex h-11 w-11 items-center justify-center rounded-full bg-blue font-display font-bold text-white">3</span><h3 class="mt-5 text-xl font-bold">Customers order, you cook</h3><p class="mt-2 leading-relaxed text-slate">Each confirmed order reaches your phone with items, address and payment status.</p></li>
+  </ol>
+</section>
+
+<!-- Before / After -->
+<section class="bg-mist">
+  <div class="mx-auto max-w-4xl px-5 py-16 md:py-24">
+    <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Before and after Dineloop.ai</h2>
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      <div class="rounded-2xl border border-line bg-white p-7">
+        <h3 class="font-display text-lg font-bold text-slate">Taking orders by phone</h3>
+        <ul class="mt-5 space-y-3.5 text-slate">
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#cross"/></svg>Missed calls when the kitchen is busy</li>
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#cross"/></svg>Orders and addresses written down by hand</li>
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#cross"/></svg>Bills added up in your head</li>
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#cross"/></svg>Payment proof you can’t easily check</li>
+        </ul>
+      </div>
+      <div class="rounded-2xl bg-ink p-7 text-white">
+        <h3 class="font-display text-lg font-bold">With Dineloop.ai</h3>
+        <ul class="mt-5 space-y-3.5 text-white/85">
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#tick"/></svg>Every chat answered instantly</li>
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#tick"/></svg>Complete order with address and map link</li>
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#tick"/></svg>Bill and delivery charge calculated for you</li>
+          <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"><use href="#tick"/></svg>One-time transaction IDs, confirmed by you</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="mx-auto max-w-6xl px-5 py-16 md:py-24">
+  <h2 class="max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">Simple monthly pricing</h2>
+  <p class="mt-4 max-w-2xl text-lg text-slate">One flat fee per restaurant. No commission on your orders.</p>
+  <div class="mt-12 grid items-stretch gap-6 md:grid-cols-3">
+    <div class="flex flex-col rounded-2xl border border-line p-8">
+      <h3 class="text-xl font-bold">Starter</h3><p class="mt-1 text-sm text-slate">For a single shop getting started</p>
+      <p class="mt-6 font-display text-4xl font-extrabold">Rs. 4,999<span class="text-base font-medium text-slate"> / month</span></p>
+      <ul class="mt-6 space-y-3 text-sm"><li>1 restaurant, 1 WhatsApp number</li><li>Menu with up to 30 items</li><li>Urdu and English chat</li><li>Easypaisa and cash on delivery</li><li>Order alerts to your phone</li></ul>
+      <a href="#demo" class="btn mt-8 rounded-full border border-line px-5 py-3 text-center text-sm font-semibold">Get a free demo</a>
+    </div>
+    <div class="flex flex-col rounded-2xl bg-ink p-8 text-white shadow-2xl shadow-ink/20 md:-my-4 md:py-12">
+      <div class="flex items-center justify-between"><h3 class="text-xl font-bold">Growth</h3><span class="rounded-full bg-blue px-3 py-1 text-xs font-bold">Most chosen</span></div>
+      <p class="mt-1 text-sm text-white/65">For busy kitchens with daily rush hours</p>
+      <p class="mt-6 font-display text-4xl font-extrabold">Rs. 9,999<span class="text-base font-medium text-white/65"> / month</span></p>
+      <ul class="mt-6 space-y-3 text-sm"><li>Everything in Starter</li><li>Unlimited menu items</li><li>Custom delivery areas and charges</li><li>Daily order summary</li><li>Priority support on WhatsApp</li></ul>
+      <a href="#demo" class="btn mt-8 rounded-full bg-blue px-5 py-3 text-center text-sm font-bold">Get a free demo</a>
+    </div>
+    <div class="flex flex-col rounded-2xl border border-line p-8">
+      <h3 class="text-xl font-bold">Multi-branch</h3><p class="mt-1 text-sm text-slate">For brands with several outlets</p>
+      <p class="mt-6 font-display text-4xl font-extrabold">Custom</p>
+      <ul class="mt-6 space-y-3 text-sm"><li>Several restaurants or branches</li><li>Separate menu and hours per branch</li><li>Onboarding help for every outlet</li><li>Pricing based on number of branches</li></ul>
+      <a href="#demo" class="btn mt-8 rounded-full border border-line px-5 py-3 text-center text-sm font-semibold">Talk to us</a>
+    </div>
+  </div>
+  <p class="mt-8 text-sm text-slate">WhatsApp’s own messaging charges, where Meta applies them, are billed separately by Meta.</p>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="bg-mist">
+  <div class="mx-auto max-w-3xl px-5 py-16 md:py-24">
+    <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Questions restaurant owners ask</h2>
+    <div class="mt-10 divide-y divide-line border-y border-line">
+      <details class="py-5"><summary class="flex items-center justify-between gap-4 text-lg font-semibold">Do my customers need to install anything?<span class="plus text-2xl text-blue transition-transform" aria-hidden="true">+</span></summary><p class="mt-3 leading-relaxed text-slate">No. They message your WhatsApp number and tap the buttons that appear. Any phone with WhatsApp works.</p></details>
+      <details class="py-5"><summary class="flex items-center justify-between gap-4 text-lg font-semibold">How do I confirm an Easypaisa payment?<span class="plus text-2xl text-blue transition-transform" aria-hidden="true">+</span></summary><p class="mt-3 leading-relaxed text-slate">The customer sends the 11-digit transaction ID. You check it in your Easypaisa account, then reply “PAID ORD-0012”, or “REJECT ORD-0012” if the money isn’t there. The customer is told either way.</p></details>
+      <details class="py-5"><summary class="flex items-center justify-between gap-4 text-lg font-semibold">What happens when we’re closed?<span class="plus text-2xl text-blue transition-transform" aria-hidden="true">+</span></summary><p class="mt-3 leading-relaxed text-slate">The bot tells customers your opening hours instead of taking an order. You decide the hours, including late-night and Ramzan timings.</p></details>
+      <details class="py-5"><summary class="flex items-center justify-between gap-4 text-lg font-semibold">Which WhatsApp number do I use?<span class="plus text-2xl text-blue transition-transform" aria-hidden="true">+</span></summary><p class="mt-3 leading-relaxed text-slate">A business number registered with WhatsApp’s business platform. We guide you through setup, and Meta’s business verification can take a few days.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- Final call to action -->
+<section class="bg-deep">
+  <div class="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-5 py-14 text-white md:flex-row md:items-center md:py-16">
+    <div><h2 class="max-w-xl text-3xl font-extrabold tracking-tight sm:text-4xl">See it with your own menu</h2><p class="mt-3 max-w-xl text-lg text-white/85">Send us your menu on WhatsApp and we’ll show you how your customers would order.</p></div>
+    <a href="https://wa.me/923363929666?text=Hi%2C%20I%27d%20like%20a%20free%20Dineloop.ai%20demo" class="btn shrink-0 rounded-full bg-white px-8 py-4 text-base font-bold text-ink">Get a free demo</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t border-line pb-24 md:pb-0">
+  <div class="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 sm:flex-row sm:items-center sm:justify-between">
+    <div><p class="flex items-center gap-2.5 font-display text-lg font-extrabold"><svg width="28" height="28" aria-hidden="true"><use href="#logo"/></svg><span>Dineloop<span class="text-blue">.ai</span></span></p><p class="mt-1 text-sm text-slate">WhatsApp ordering for restaurants. Made in Pakistan.</p></div>
+    <nav class="flex flex-wrap gap-6 text-sm font-medium text-slate" aria-label="Footer"><a href="#features" class="hover:text-ink">Features</a><a href="#how" class="hover:text-ink">How it works</a><a href="#pricing" class="hover:text-ink">Pricing</a><a href="#faq" class="hover:text-ink">FAQ</a></nav>
+    <p class="text-sm text-slate">© 2026 Dineloop.ai. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 px-5 pt-3 backdrop-blur md:hidden" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom,0px))">
+  <a href="https://wa.me/923363929666?text=Hi%2C%20I%27d%20like%20a%20free%20Dineloop.ai%20demo" class="btn block rounded-full bg-blue py-3 text-center text-base font-bold text-white">Get a free demo on WhatsApp</a>
+</div>
+
+<script>
+/* Light scroll reveal; everything stays visible without JS or with reduced motion */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); io.unobserve(e.target);
+      setTimeout(function () { e.target.style.removeProperty('--d'); }, 900);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('main section:not(:first-of-type) h2, main section:not(:first-of-type) .grid > *, #faq details').forEach(function (el) {
+    var i = Array.prototype.indexOf.call(el.parentNode.children, el);
+    el.style.setProperty('--d', Math.min(i, 4) * 70 + 'ms');
+    el.classList.add('rv'); io.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
